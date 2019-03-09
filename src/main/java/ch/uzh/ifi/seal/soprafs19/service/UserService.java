@@ -15,6 +15,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
+/** USER SERVICE: CONTAINS FUNCTIONS FOR USER CONTROLLER, HAS ACCESS TO REPOSITORY**/
+
 @Service
 @Transactional
 public class UserService {
@@ -33,6 +35,12 @@ public class UserService {
         return this.userRepository.findAll();
     }
 
+    /** CREATE USER FUNCTION, USED  FOR @PostMapping("/users")
+     *
+     * @param newUser - user
+     * @return newUSER - new user
+     */
+
     public User createUser(User newUser) {
 
         newUser.setToken(UUID.randomUUID().toString());
@@ -47,6 +55,15 @@ public class UserService {
         userRepository.save(newUser);
         log.debug("Created Information for User: {}", newUser);
         return newUser;
+    }
+
+    /**  GET USER BY USERNAME, USED FOR LOGIN CHECK IN @PostMapping("/login")
+     *      @param username - username from login
+     *      @return user - user found in jpa database
+     */
+
+    public User getUserbyUserName (String username){
+        return userRepository.findByUsername(username);
     }
 }
 
