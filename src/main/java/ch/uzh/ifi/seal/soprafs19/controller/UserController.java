@@ -38,8 +38,15 @@ public class UserController {
     @PostMapping("/login")
     @ResponseBody
     public ResponseEntity<User> login(@RequestBody User loginuser){
-            //get user from db with the stated username
+
+            //DEBUGGING
+            System.out.println("ID from login: " + loginuser.getId());
+            System.out.println("Username from login: " + loginuser.getUsername());
+            System.out.println("PW: " + loginuser.getPassword());
+            //get user from db with the stated credentials
             User dbuser = service.getUserbyUserName (loginuser.getUsername());
+            System.out.println("ID:" +dbuser.getId());
+            System.out.println("PW:" +dbuser.getPassword());
             //check if user from db and stated user have same login credentials, if yes, login successful
             if (loginuser.getUsername().equals(dbuser.getUsername()) && loginuser.getPassword().equals(dbuser.getPassword())){
                 System.out.println("Login successful");
