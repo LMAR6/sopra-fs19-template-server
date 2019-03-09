@@ -54,6 +54,7 @@ public class UserService {
         newUser.setCreationdate(todayAsString);
         userRepository.save(newUser);
         log.debug("Created Information for User: {}", newUser);
+        System.out.println("User created");
         return newUser;
     }
 

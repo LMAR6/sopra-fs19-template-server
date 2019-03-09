@@ -38,7 +38,6 @@ public class UserController {
     @PostMapping("/login")
     @ResponseBody
     public ResponseEntity<User> login(@RequestBody User loginuser){
-        try {
             //get user from db with the stated username
             User dbuser = service.getUserbyUserName (loginuser.getUsername());
             //check if user from db and stated user have same login credentials, if yes, login successful
@@ -50,10 +49,5 @@ public class UserController {
                 System.out.println("Login failed");
                 return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
             }
-
-        } catch (Exception f) {
-            System.out.println("User does not exist");
-        }
-    return null;
     }
 }
