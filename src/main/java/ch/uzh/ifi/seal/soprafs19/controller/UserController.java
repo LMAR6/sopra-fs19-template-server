@@ -15,11 +15,9 @@ public class UserController {
 
     @Autowired
     private final UserService service;
-
     UserController(UserService service) {
         this.service = service;
     }
-
     @GetMapping("/users")
     ResponseEntity<Iterable<User>> all() {
         System.out.println("GET /users");
@@ -55,7 +53,6 @@ public class UserController {
     @PostMapping("/login")
     @ResponseBody
     public ResponseEntity<User> login(@RequestBody User loginuser){
-
             //DEBUGGING
             System.out.println("ID from login: " + loginuser.getId());
             System.out.println("Username from login: " + loginuser.getUsername());
@@ -81,7 +78,9 @@ public class UserController {
      */
 
     @GetMapping("/users/{userId}")
+    //Auth missing here...
     ResponseEntity<User> getId(@PathVariable long userId) {
+
         //get user by its id
         System.out.println("GET /users/userid");
         return new ResponseEntity<>(this.service.getUserById(userId), HttpStatus.OK);
@@ -90,7 +89,8 @@ public class UserController {
 
     @PutMapping("/users/{userId}")
     @ResponseBody
-    public ResponseEntity<User> update(@RequestBody User user){
+    //Auth mising here...
+        public ResponseEntity<User> update(@RequestBody User user){
             long id = user.getId();
             //debugging
             System.out.println("ID is: " + id);
