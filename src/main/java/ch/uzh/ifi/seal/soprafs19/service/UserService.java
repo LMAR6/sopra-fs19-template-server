@@ -66,6 +66,36 @@ public class UserService {
     public User getUserbyUserName (String username){
         return userRepository.findByUsername(username);
     }
+
+    public User getUserbyToken(String tok){
+        return userRepository.findByToken(tok);
+    }
+
+    public void updateUser(User user){
+        userRepository.save(user);
+    }
+
+    public void updateUsers(){
+        userRepository.saveAll(userRepository.findAll());
+
+    }
+
+    public boolean userExists(User e){
+        try{
+            System.out.println("user exists method");
+            return userRepository.existsById(e.getId());
+
+        } catch (Exception z) {
+            System.out.println("catching everything");
+            return false;
+        }
+    }
+
+    public User getUserById(long userId){
+            User a = userRepository.findById(userId).get();
+            return a;
+    }
+
 }
 
 

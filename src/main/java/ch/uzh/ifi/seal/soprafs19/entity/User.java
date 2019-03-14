@@ -18,10 +18,6 @@ public class User implements Serializable {
 	@Id
 	@GeneratedValue
 	private Long id;
-
-	// TODO: delete
-	//@Column(nullable = false)
-	//private String name;
 	
 	@Column(nullable = false, unique = true) 
 	private String username;
@@ -49,16 +45,6 @@ public class User implements Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
-	//TODO: delete
-	//public String getName() {
-	//	return name;
-	//}
-
-	//TODO: delete
-	//public void setName(String name) {
-	//	this.name = name;
-	//}
 
 	public String getUsername() {
 		return username;
