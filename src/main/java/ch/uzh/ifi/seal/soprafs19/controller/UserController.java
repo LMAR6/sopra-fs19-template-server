@@ -24,6 +24,7 @@ public class UserController {
     ResponseEntity<Iterable<User>> all() {
         System.out.println("GET /users");
         return new ResponseEntity<>(service.getUsers(), HttpStatus.OK);
+
     }
 
     @PostMapping("/users")
