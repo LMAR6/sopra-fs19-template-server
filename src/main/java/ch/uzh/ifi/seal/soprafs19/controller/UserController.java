@@ -4,11 +4,16 @@ import ch.uzh.ifi.seal.soprafs19.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
+/**
+ * AUTHENTICATION
+ * needed for get and put mappings
+ * using user tokens
+ */
 
 @RestController
 public class UserController {
@@ -18,11 +23,22 @@ public class UserController {
     UserController(UserService service) {
         this.service = service;
     }
-    @GetMapping("/users")
-    ResponseEntity<Iterable<User>> all() {
-        System.out.println("GET /users");
-        return new ResponseEntity<>(service.getUsers(), HttpStatus.OK);
 
+    /**
+     * USERS (not id specific)
+     */
+
+     @GetMapping("/users")
+    //Request Header: looks for token in header and saves as string token
+    ResponseEntity<Iterable<User>> all(@RequestHeader(value = "token") String token, HttpServletResponse response) {
+        //if a user with this token exists, get /users is allowed
+        if (service.getUserbyToken(token) != null) {
+            System.out.println("GET /users");
+            return new ResponseEntity<>(service.getUsers(), HttpStatus.OK);
+        }
+        else {
+            throw new IllegalArgumentException("AUTH FAILED");
+        }
     }
 
     @PostMapping("/users")
@@ -77,21 +93,27 @@ public class UserController {
      * SETTINGS
      */
 
-    @GetMapping("/users/{userId}")
-    //Auth missing here...
-    ResponseEntity<User> getId(@PathVariable long userId) {
 
-        //get user by its id
-        System.out.println("GET /users/userid");
-        return new ResponseEntity<>(this.service.getUserById(userId), HttpStatus.OK);
+    @GetMapping("/users/{userId}")
+    //Request Header: looks for token in header and saves as string token
+    ResponseEntity<User> getId(@PathVariable long userId, @RequestHeader(value = "token") String token, HttpServletResponse response) {
+        //if a user with this token exists, get /users is allowed
+        if (service.getUserbyToken(token) != null) {
+            System.out.println("GET /users/userid");
+            return new ResponseEntity<>(this.service.getUserById(userId), HttpStatus.OK);
+        }
+        else {
+            throw new IllegalArgumentException("AUTH FAILED");
+        }
     }
 
 
     @PutMapping("/users/{userId}")
     @ResponseBody
-    //Auth mising here...
-        public ResponseEntity<User> update(@RequestBody User user){
-            long id = user.getId();
+    //Request Header: looks for token in header and saves as string token
+        public ResponseEntity<User> update(@RequestBody User user, @RequestHeader(value = "token") String token, HttpServletResponse response){
+        if (service.getUserbyToken(token) != null) {
+        long id = user.getId();
             //debugging
             System.out.println("ID is: " + id);
                 User current = service.getUserbyToken(user.getToken());
@@ -113,5 +135,9 @@ public class UserController {
                 service.updateUser(current);
                 return new ResponseEntity<>(user, HttpStatus.NO_CONTENT);
             }
+        else {
+            throw new IllegalArgumentException("AUTH FAILED");
+        }
+    }
 }
 
