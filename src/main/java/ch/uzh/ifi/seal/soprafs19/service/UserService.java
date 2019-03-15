@@ -75,25 +75,9 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void updateUsers(){
-        userRepository.saveAll(userRepository.findAll());
-
-    }
-
-    public boolean userExists(User e){
-        try{
-            System.out.println("user exists method");
-            return userRepository.existsById(e.getId());
-
-        } catch (Exception z) {
-            System.out.println("catching everything");
-            return false;
-        }
-    }
-
     public User getUserById(long userId){
-            User a = userRepository.findById(userId).get();
-            return a;
+            User userbyid = userRepository.findById(userId).get();
+            return userbyid;
     }
 
 }

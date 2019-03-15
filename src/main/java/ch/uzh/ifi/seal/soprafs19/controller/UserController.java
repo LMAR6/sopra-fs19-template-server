@@ -113,27 +113,31 @@ public class UserController {
     //Request Header: looks for token in header and saves as string token
         public ResponseEntity<User> update(@RequestBody User user, @RequestHeader(value = "token") String token, HttpServletResponse response){
         if (service.getUserbyToken(token) != null) {
-        long id = user.getId();
+            //if user does not exist return 404
+            if(service.getUserById(user.getId())==null){
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            long id = user.getId();
             //debugging
             System.out.println("ID is: " + id);
-                User current = service.getUserbyToken(user.getToken());
+            User current = service.getUserbyToken(user.getToken());
+            if (user.getUsername() != null) {
+                //check if username is free
+                if (service.getUserbyUserName(user.getUsername()) == null) {
+                    current.setUsername(user.getUsername());
+                } else {
+                return new ResponseEntity<>(null, HttpStatus.CONFLICT);
+                }
+            }
 
-                if (user.getUsername() != null) {
-                    //check if username is free
-                    if (service.getUserbyUserName(user.getUsername()) == null) {
-                        current.setUsername(user.getUsername());
-                    } else {
-                    return new ResponseEntity<>(null, HttpStatus.CONFLICT);
-                    }
-                }
-                if (user.getBirthday() != null) {
-                    current.setBirthday(user.getBirthday());
-                }
-                if (user.getStatus() != null) {
-                    current.setStatus(user.getStatus());
-                }
-                service.updateUser(current);
-                return new ResponseEntity<>(user, HttpStatus.NO_CONTENT);
+            if (user.getBirthday() != null) {
+                current.setBirthday(user.getBirthday());
+            }
+            if (user.getStatus() != null) {
+                current.setStatus(user.getStatus());
+            }
+            service.updateUser(current);
+            return new ResponseEntity<>(user, HttpStatus.NO_CONTENT);
             }
         else {
             throw new IllegalArgumentException("AUTH FAILED");
